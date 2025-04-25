@@ -2,7 +2,7 @@ import terminalFunctions as game
 
 def main():
     while True:
-        game.game_loop()
+        game.super_game_loop()
         while True:
             option = input("Play again? (Y/N): ").capitalize()
             if option != "Y" and option != "N":

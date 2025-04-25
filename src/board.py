@@ -1,5 +1,8 @@
 class Board:
     def __init__(self):
+        """A tictactoe board that keeps track of
+        what has been placed where. default values are '_'
+            use try_place, check_over, and the tie/win properties"""
         self.data = ['_'] * 9
         self.winner = None
 
@@ -29,22 +32,8 @@ class Board:
         else:
             return False
 
-    def __str__(self):
-        """returns a pretty board
-        | _ | _ | _ |
-        | X | O | O |
-        | _ | X | O |
-        """
-        b = self.data
-        return f"| {b[0]} | {b[1]} | {b[2]} |\n| {b[3]} | {b[4]} | {b[5]} |\n| {b[6]} | {b[7]} | {b[8]} |"
-
     def check_over(self):
         """Checks if the game is over and sets the appropriate winner"""
-
-        #check for tie
-        if '_' not in self.data:
-            self.winner = '_'
-            return True
 
         #Checking cols
         for col in [0, 1, 2]:
@@ -71,12 +60,17 @@ class Board:
                 self.winner = self.data[2]
                 return True
 
+        # check for tie
+        if '_' not in self.data:
+            self.winner = 'T'
+            return True
+
         return False
 
     @property
     def tie(self):
         """Returns True if gamer is a tie"""
-        return True if self.winner == '_' else False
+        return True if self.winner == 'T' else False
 
     @property
     def x_won(self):
@@ -87,3 +81,38 @@ class Board:
     def o_won(self):
         """returns True if O won"""
         return True if self.winner == 'O' else False
+
+    def str_small(self):
+        """returns 3 strings for super formatting"""
+        b = self.data
+
+        GREY = '\033[38;5;242m'
+        RED = '\033[91m'
+        BLUE = '\033[94m'
+        RESET = '\033[0m'
+        if self.x_won:
+            line_one = RED + "|\\   /|" + RESET
+            line_two = RED + "|  X  |" + RESET
+            line_three = RED + "|/   \\|" + RESET
+        elif self.o_won:
+            line_one = BLUE + "|/ ̅ \\|" + RESET
+            line_two = BLUE + "||   ||" + RESET
+            line_three = BLUE + "|\\ _ /|"+RESET
+        elif self.tie:
+            line_one = GREY + f"|{b[0]}|{b[1]}|{b[2]}|" + RESET
+            line_two = GREY + f"|{b[3]}|{b[4]}|{b[5]}|" + RESET
+            line_three = GREY + f"|{b[6]}|{b[7]}|{b[8]}|" + RESET
+        else:
+            line_one = f"|{b[0]}|{b[1]}|{b[2]}|"
+            line_two = f"|{b[3]}|{b[4]}|{b[5]}|"
+            line_three = f"|{b[6]}|{b[7]}|{b[8]}|"
+        return line_one, line_two, line_three
+
+    def __str__(self):
+        """returns a pretty board
+        | _ | _ | _ |
+        | X | O | O |
+        | _ | X | O |
+        """
+        b = self.data
+        return f"| {b[0]} | {b[1]} | {b[2]} |\n| {b[3]} | {b[4]} | {b[5]} |\n| {b[6]} | {b[7]} | {b[8]} |"
