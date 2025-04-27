@@ -58,7 +58,7 @@ def super_input_prompt(game : superBoard.SuperBoard()):
         super_position = get_valid_input("board")
     return super_position
 
-def super_game_loop():
+def super_game_loop_terminal():
     game = superBoard.SuperBoard()
     print_start()
     player = 'X'
@@ -100,5 +100,5 @@ def super_game_loop():
         player = flip_player(player)
 
 
-
-
+#def
+#def super_game_screen_update()

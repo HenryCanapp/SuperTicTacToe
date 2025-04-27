@@ -1,12 +1,15 @@
+import pygame as pg
 import board
+from colors import Colors
 
 class SuperBoard(board.Board):
     def __init__(self):
-        super().__init__()
-        self.current_board = None
+        super().__init__(size=474, has_tiles=False)
+        self.current_board : board.Board() = None
         self.boards = []
+        self.next_board = -1
         for i in range(9):
-            self.boards.append(board.Board())
+            self.boards.append(board.Board(pos = i))
         #inherits winner variable
         #inherits data list to keep track of each boards winner
 
@@ -74,3 +77,41 @@ class SuperBoard(board.Board):
             line_three = "|"
         return final
 
+    def get_board_clicked(self, pos):
+        """Returns the tile that was clicked on"""
+        for i in self.boards:
+            if i.clicked_on(pos):
+                return i
+        return None
+
+    def get_index_clicked(self, pos):
+        """Gets the index of the tile clicked"""
+        for i in range(9):
+            if self.boards[i].clicked_on(pos):
+                return i
+        return -1
+
+    def current_board_clicked(self, pos):
+        if self.current_board is not None:
+            return self.current_board.clicked_on(pos)
+        return False
+
+
+    def update_surface(self):
+        """Puts all of the boards and their data on the super board"""
+        self.surface.fill(Colors.BLACK)
+        for i in self.boards:
+            if self.next_board > -1 and i is self.boards[self.next_board]:
+                i.next = True
+                i.selected = False
+            elif i is self.current_board:
+                i.selected = True
+                i.next = False
+            else:
+                i.selected = False
+                i.next = False
+            i.update_surface()
+            i.draw_board(self.surface)
+
+    def draw_game(self, screen):
+        screen.blit(self.surface, [0,0])
