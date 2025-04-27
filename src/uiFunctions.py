@@ -25,19 +25,16 @@ class GameUI:
             if self.picking_board:
                 # sets the super position to the board clicked, if invalid sets to -1
                 self.selected_board = self.game.get_index_clicked(pos)
-                print(f"Board clicked {self.selected_board}")
 
             # if not in board selection mode, check if clicked on the current selected board
             elif self.game.current_board_clicked(pos):
                 # sets the position to the position clicked, if invalid sets to -1
                 self.position = self.game.current_board.get_index_clicked(pos)
-                print(f"Tile clicked {self.position}")
 
             # if not clicked on the current selected board, but go_anywhere, switch to that board
             elif self.go_anywhere:
                 # sets the super position to the board clicked, if invalid sets to -1
                 self.selected_board = self.game.get_index_clicked(pos)
-                print(f"new board clicked {self.selected_board}")
 
 
     def evaluate_state(self):
