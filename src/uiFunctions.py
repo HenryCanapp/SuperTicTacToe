@@ -1,5 +1,6 @@
 import board
 import superBoard
+import menu
 import pygame as pg
 
 from terminalFunctions import place_value, pick_board, flip_player
@@ -8,18 +9,33 @@ class GameUI:
     def __init__(self):
         self.go_anywhere = True
         self.picking_board = True
+        self.game_over = False
         self.game = superBoard.SuperBoard()
+        self.menu = menu.Menu()
         self.player = 'X'
         #what tile was last clicked
         self.last_position = -1
         self.position = -1
         self.super_position = -1
         self.selected_board = -1
+        self.menu_clicked = False
+
+    def reset_game(self):
+        self.go_anywhere = True
+        self.picking_board = True
+        self.game_over = False
+        self.game = superBoard.SuperBoard()
+        self.player = 'X'
+        self.last_position = -1
+        self.position = -1
+        self.super_position = -1
+        self.selected_board = -1
+        self.menu_clicked = False
 
     def find_what_clicked(self, pos):
         """finds what on the board was clicked and sets appropriate values"""
         # checks if the click was on the board
-        if self.game.clicked_on(pos):
+        if not self.game_over and self.game.clicked_on(pos):
 
             # if in board selection mode, select that board
             if self.picking_board:
@@ -35,6 +51,7 @@ class GameUI:
             elif self.go_anywhere:
                 # sets the super position to the board clicked, if invalid sets to -1
                 self.selected_board = self.game.get_index_clicked(pos)
+        else: self.menu_clicked = self.menu.clicked_on(pos)
 
 
     def evaluate_state(self):
@@ -56,7 +73,7 @@ class GameUI:
                 if self.last_position > -1:
                     self.game.current_board.tiles[self.last_position].toggle_selected()
                 self.last_position = self.position
-            self.game.next_board = self.last_position
+
 
         if self.selected_board > -1:
             if self.game.try_pick_board(self.selected_board):
@@ -65,8 +82,37 @@ class GameUI:
                     self.last_position = -1
                 self.super_position = self.selected_board
                 self.picking_board = False
+        self.game.next_board = self.last_position
+
+        if self.menu_clicked:
+            self.reset_game()
+
 
         return False
+
+    def change_state(self):
+
+        # if the current board has been completed, change the data
+        if self.game.check_current_board():
+            self.game.place_value(self.game.current_board.winner, self.super_position)
+
+        if self.game.check_over():
+            self.menu.winner_text(self.game.winner)
+            self.game_over = True
+            return
+
+        if self.game.move_board(self.position):
+            self.super_position = self.position
+            self.go_anywhere = False
+            self.picking_board = False
+        else:
+            self.super_position = -1
+            self.go_anywhere = True
+            self.picking_board = True
+        if self.player == 'X':
+            self.player = 'O'
+        else:
+            self.player = 'X'
 
 
     def update_game_state(self, pos = None):
@@ -78,26 +124,13 @@ class GameUI:
 
         #waits till player takes their turn
         if self.evaluate_state():
-            # if the current board has been completed, change the data
-            if self.game.check_current_board():
-                self.game.place_value(self.game.current_board.winner, self.super_position)
-
-            if self.game.move_board(self.position):
-                self.super_position = self.position
-                self.go_anywhere = False
-                self.picking_board = False
-            else:
-                self.super_position = -1
-                self.go_anywhere = True
-                self.picking_board = True
-            if self.player == 'X':
-                self.player = 'O'
-            else:
-                self.player = 'X'
+            self.change_state()
 
         self.selected_board = -1
         self.position = -1
 
     def draw_game(self, screen : pg.surface.Surface):
         self.game.update_surface()
+        self.menu.update_menu(self.player)
         self.game.draw_game(screen)
+        self.menu.draw_menu(screen)

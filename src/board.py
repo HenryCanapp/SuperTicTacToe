@@ -11,10 +11,10 @@ class Tile:
         self.separation = separation
         self.confirmed = False
 
-        self.default_background_color = Colors.WHITE
-        self.background_color = Colors.WHITE
-        self.x_color = Colors.RED
-        self.o_color = Colors.BLUE
+        self.default_background_color = Colors.TILE_DEFAULT
+        self.background_color = Colors.TILE_DEFAULT
+        self.x_color = Colors.X_COLOR
+        self.o_color = Colors.O_COLOR
 
     def draw_data(self):
         """Draws the X or O or nothing onto the tile's surface"""
@@ -32,7 +32,7 @@ class Tile:
         if self.data == '_':
             self.background_color = self.default_background_color
         elif not self.confirmed:
-            self.background_color = Colors.YELGRN
+            self.background_color = Colors.TILE_SELECTED
         else:
             self.background_color = self.default_background_color
         self.surface.fill(self.background_color)
@@ -71,8 +71,8 @@ class Board:
         self.tile_size = (size - 2 * line_width) // 3
         self.selected = False
         self.next = False
-        self.x_color = Colors.RED
-        self.o_color = Colors.BLUE
+        self.x_color = Colors.X_COLOR
+        self.o_color = Colors.O_COLOR
 
         #list of tiles for drawing purposes
         if has_tiles:
@@ -223,20 +223,20 @@ class Board:
         -if the board has been tied, set to be transparent
         -draw all the tiles onto the surface
         -changes the background color of the tiles based on if it is selected or not"""
-        self.surface.fill(Colors.BLACK)
+        self.surface.fill(Colors.LINE_COLOR)
         self.surface.set_alpha(255)
         if self.tie:
             self.surface.set_alpha(175)
         if self.x_won or self.o_won:
-            self.surface.fill(Colors.WHITE)
+            self.surface.fill(Colors.BOARD_DEFAULT)
             self.draw_data()
         else:
             if self.selected:
-                tiles_color = Colors.GREEN
+                tiles_color = Colors.BOARD_SELECTED
             elif self.next:
-                tiles_color = Colors.YELLOW
+                tiles_color = Colors.NEXT
             else:
-                tiles_color = Colors.WHITE
+                tiles_color = Colors.TILE_DEFAULT
             for i in self.tiles:
                 i.default_background_color = tiles_color
                 i.update_surface()

@@ -37,7 +37,7 @@ def main():
                 game_data.update_game_state(event.pos)
 
         #render the game
-        screen.fill([255,255,255])
+        screen.fill([0,0,0])
         game_data.draw_game(screen)
 
         pg.display.flip()

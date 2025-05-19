@@ -2,6 +2,11 @@ import pygame as pg
 import board
 from colors import Colors
 
+
+def new_board():
+    return SuperBoard()
+
+
 class SuperBoard(board.Board):
     def __init__(self):
         super().__init__(size=474, has_tiles=False)
@@ -99,7 +104,7 @@ class SuperBoard(board.Board):
 
     def update_surface(self):
         """Puts all of the boards and their data on the super board"""
-        self.surface.fill(Colors.BLACK)
+        self.surface.fill(Colors.SUPER_LINE_COLOR)
         for i in self.boards:
             if self.next_board > -1 and i is self.boards[self.next_board]:
                 i.next = True
