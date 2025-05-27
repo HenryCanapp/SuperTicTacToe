@@ -13,14 +13,16 @@ class Menu:
 
 
         self.font = pg.font.Font(os.path.join(os.getcwd(),'files', 'RobotoSlab-VariableFont_wght.ttf'),18)
+        self.font.set_bold(True)
+        self.player_font = pg.font.Font(os.path.join(os.getcwd(),'files', 'RobotoSlab-VariableFont_wght.ttf'),36)
+        self.player_font.set_bold(True)
 
         # surface for displaying text
-        self.font.set_bold(True)
-        self.message_surface = pg.Surface((158, 78))
+        self.message_surface = pg.Surface((self.box.width // 3, 78))
         self.background_color = Colors.MENU_BG
         self.display_color = Colors.MENU_BUTTON
-        self.player_x = self.font.render("X", True, Colors.X_COLOR)
-        self.player_o = self.font.render("O", True, Colors.O_COLOR)
+        self.player_x = self.player_font.render("X", True, Colors.X_COLOR)
+        self.player_o = self.player_font.render("O", True, Colors.O_COLOR)
         self.displayed_player = self.player_x
         self.message_text = self.font.render("Your Turn!", True, Colors.WHITE)
 
@@ -58,8 +60,8 @@ class Menu:
 
         self.surface.fill(self.background_color)
         self.message_surface.fill(self.display_color)
-        self.message_surface.blit(self.displayed_player, (69, 0))
-        self.message_surface.blit(self.message_text, (33, 20))
+        self.message_surface.blit(self.displayed_player, (65, 0))
+        self.message_surface.blit(self.message_text, (33, 40))
 
     def draw_menu(self, screen):
         self.surface.blit(self.message_surface, (158,5))
